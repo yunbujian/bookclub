@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《书写人生》学习网站</title>
+    <!-- 引入Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入Inter字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* 自定义样式 */
+        body {
+            font-family: 'Inter', 'Helvetica Neue', 'Helvetica', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
+            background-color: #f4f7f6; /* 柔和的背景色 */
+        }
+        
+        /* 标签页样式 */
+        .tab-btn {
+            transition: all 0.3s ease;
+        }
+        .tab-active {
+            border-bottom-color: #3b82f6; /* 蓝色 */
+            color: #3b82f6;
+            font-weight: 600;
+        }
+        .tab-inactive {
+            border-bottom-color: transparent;
+            color: #6b7280; /* 灰色 */
+        }
+        .tab-pane {
+            display: none; /* 默认隐藏所有内容 */
+        }
+        .tab-pane.active {
+            display: block; /* 显示激活的内容 */
+        }
+
+        /* 思维导图样式 */
+        .mindmap {
+            padding: 20px;
+            overflow-x: auto; /* 允许横向滚动 */
+        }
+        .mindmap ul {
+            position: relative;
+            padding-left: 20px;
+            list-style: none;
+        }
+        .mindmap li {
+            position: relative;
+            padding: 8px 0 8px 30px; /* 增加间距 */
+            margin-bottom: 8px;
+        }
+        /* 连接线 */
+        .mindmap li::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-left: 2px solid #9ca3af; /* 灰色连接线 */
+            height: 100%;
+            width: 0;
+        }
+        .mindmap li:first-child::before {
+            top: 20px; /* 调整第一个子元素的线条起点 */
+        }
+        .mindmap li:last-child::before {
+            height: 20px; /* 调整最后一个子元素的线条终点 */
+        }
+        /* 水平线 */
+        .mindmap li::after {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            border-top: 2px solid #9ca3af;
+            width: 20px; /* 水平线长度 */
+            height: 0;
+        }
+        .mindmap > ul > li::before,
+        .mindmap > ul > li::after {
+            display: none; /* 根节点不需要连接线 */
+        }
+        .mindmap .node {
+            display: inline-block;
+            padding: 10px 16px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border: 1px solid #e5e7eb;
+            transition: all 0.2s ease;
+        }
+        .mindmap .node:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .mindmap .core {
+            background-color: #bfdbfe; /* 浅蓝色 */
+            border-color: #93c5fd;
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+        .mindmap .branch-1 {
+            background-color: #fef3c7; /* 浅黄色 */
+            border-color: #fde68a;
+            font-weight: 600;
+        }
+        .mindmap .branch-2 {
+            background-color: #d1fae5; /* 浅绿色 */
+            border-color: #a7f3d0;
+            font-weight: 600;
+        }
+        .mindmap .branch-3 {
+            background-color: #fee2e2; /* 浅红色 */
+            border-color: #fecaca;
+            font-weight: 600;
+        }
+
+        /* 折叠笔记样式 */
+        .accordion-title {
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        .accordion-title:hover {
+            background-color: #eff6ff; /* 浅蓝悬停 */
+        }
+        .accordion-content {
+            transition: max-height 0.3s ease-out;
+            overflow: hidden;
+        }
+
+        /* 题卡样式 */
+        .flashcard {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border: 1px solid #bae6fd;
+            min-height: 200px;
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="container mx-auto max-w-5xl bg-white rounded-2xl shadow-xl overflow-hidden">
+        <!-- 头部 -->
+        <header class="p-6 md:p-8 bg-gradient-to-r from-blue-600 to-blue-800 text-white shadow-md">
+            <h1 class="text-3xl md:text-4xl font-bold mb-2">《书写人生》</h1>
+            <p class="text-lg md:text-xl font-light">—— 释放你内在的作家：交互式学习网站</p>
+        </header>
+
+        <!-- 标签页导航 -->
+        <nav class="flex border-b border-gray-200 bg-gray-50">
+            <button class="tab-btn flex-1 py-4 px-2 text-center text-sm md:text-base border-b-4 tab-active" data-tab="tab-1">
+                <span class="hidden md:inline">📚</span> 引读笔记
+            </button>
+            <button class="tab-btn flex-1 py-4 px-2 text-center text-sm md:text-base border-b-4 tab-inactive" data-tab="tab-2">
+                <span class="hidden md:inline">🗺️</span> 思维导图
+            </button>
+            <button class="tab-btn flex-1 py-4 px-2 text-center text-sm md:text-base border-b-4 tab-inactive" data-tab="tab-3">
+                <span class="hidden md:inline">📑</span> 总结复盘
+            </button>
+            <button class="tab-btn flex-1 py-4 px-2 text-center text-sm md:text-base border-b-4 tab-inactive" data-tab="tab-4">
+                <span class="hidden md:inline">💡</span> 思考题卡
+            </button>
+        </nav>
+
+        <!-- 标签页内容 -->
+        <div class="p-6 md:p-8 min-h-[400px]">
+            
+            <!-- 1. 引读笔记 -->
+            <div id="tab-1" class="tab-pane active space-y-4 leading-relaxed">
+                <h2 class="text-2xl font-semibold text-blue-700 mb-4 border-b pb-2">欢迎来到《书写人生》的世界</h2>
+                <p class="text-lg">娜塔莉·戈德堡 (Natalie Goldberg) 的这本书不仅仅是关于“写作技巧”的，它更是一份邀请，邀请你将<strong class="text-blue-600">写作视为一种修行</strong>——就像禅修、瑜伽或跑步一样。</p>
+                
+                <blockquote class="border-l-4 border-blue-300 pl-4 py-2 bg-blue-50 text-gray-700 italic">
+                    “写作是一条通向我们内心的道路，让我们变得亲密。”
+                </blockquote>
+
+                <h3 class="text-xl font-semibold text-gray-800 mt-6">核心理念：释放，而非强求</h3>
+                <p>我们常常被“写得好”的压力所束缚，被内心那个严苛的“编辑”所恐吓。戈德堡的核心方法论是：</p>
+                <ul class="list-disc list-inside space-y-2 pl-4 text-gray-700">
+                    <li><strong class="text-gray-900">信任你的“第一手念头” (First Thoughts)：</strong> 在你的大脑开始评判、审查和“修正”之前，那些最初闪现的念头拥有最原始、最强大的能量。</li>
+                    <li><strong class="text-gray-900">进行“写作练习” (Writing Practice)：</strong> 这不是为了写出杰作，而是为了练习“在场”。给自己设定一个时间（比如10分钟），然后不停地写。</li>
+                </ul>
+
+                <h3 class="text-xl font-semibold text-gray-800 mt-6">你将从本书学到什么？</h3>
+                <p>这本书将帮助你克服写作的恐惧，不再等待所谓的“灵感”，而是主动地、持续地与你的心灵连接。你将学会：</p>
+                <ul class="list-decimal list-inside space-y-2 pl-4 text-gray-700">
+                    <li>如何闭上你“内心的编辑”的嘴。</li>
+                    <li>为什么“手不要停”是写作练习的第一准则。</li>
+                    <li>如何把你生活中的“垃圾”（平凡的经历、痛苦和执念）视作写作的“堆肥”。</li>
+                    <li>相信你自己的声音，写下你真实的生活。</li>
+                </ul>
+                <p class="mt-4 font-medium">准备好笔和本子。这不是一本只用来看的书，这是一本需要“做”的书。让我们开始吧。</p>
+            </div>
+
+            <!-- 2. 思维导图 -->
+            <div id="tab-2" class="tab-pane">
+                <h2 class="text-2xl font-semibold text-blue-700 mb-6 border-b pb-2">核心概念：思维导图</h2>
+                <div class="mindmap">
+                    <ul>
+                        <li><span class="node core">《书写人生》：释放内在的作家</span>
+                            <ul>
+                                <li><span class="node branch-1">核心练习：写作练习 (Writing Practice)</span>
+                                    <ul>
+                                        <li><span class="node">定时练习 (如10分钟)</span></li>
+                                        <li><span class="node">手不要停 (Keep Hand Moving)</span></li>
+                                        <li><span class="node">不删改，不回头看</span></li>
+                                        <li><span class="node">别担心逻辑、语法、拼写</span></li>
+                                        <li><span class="node">失去控制 (Lose Control)</span></li>
+                                        <li><span class="node">直取要害 (Go for the Jugular)</span></li>
+                                    </ul>
+                                </li>
+                                <li><span class="node branch-2">关键心态：信任自心 (Trust Your Mind)</span>
+                                    <ul>
+                                        <li><span class="node">捕捉“第一手念头”</span></li>
+                                        <li><span class="node">战胜“内心的编辑”</span></li>
+                                        <li><span class="node">写作即修行 (Zen Practice)</span></li>
+                                        <li><span class="node">相信自己，你是自己的权威</span></li>
+                                    </ul>
+                                </li>
+                                <li><span class="node branch-3">写作的“肥料”：生活与觉察</span>
+                                    <ul>
+                                        <li><span class="node">堆肥 (Composting)：让经验沉淀</span></li>
+                                        <li><span class="node">运用原创细节 (Original Detail)</span></li>
+                                        <li><span class="node">展示，而非告知 (Show, Don't Tell)</span></li>
+                                        <li><span class="node">你的执念 (Obsessions) 是能量来源</span></li>
+                                        <li><span class="node">写作是身体性的 (Writing is Physical)</span></li>
+                                    </ul>
+                                </li>
+                                <li><span class="node branch-1">写作的场域 (The Writing Field)</span>
+                                    <ul>
+                                        <li><span class="node">随处可写 (Write Anyplace)</span></li>
+                                        <li><span class="node">写作是社群性的 (Communal Act)</span></li>
+                                        <li><span class="node">活两次 (Living Twice)：体验生活，然后书写它</span></li>
+                                        <li><span class="node">使用好的工具（快写的笔、便宜的本子）</span></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 3. 总结复盘笔记 -->
+            <div id="tab-3" class="tab-pane space-y-4">
+                <h2 class="text-2xl font-semibold text-blue-700 mb-4 border-b pb-2">总结复盘：核心法则</h2>
+                
+                <!-- 折叠项 1 -->
+                <div class="border border-gray-200 rounded-lg overflow-hidden">
+                    <h3 class="accordion-title text-lg font-semibold text-gray-800 p-4 flex justify-between items-center bg-gray-50">
+                        <span>[法则一] 写作练习：基本功</span>
+                        <span class="text-blue-500 text-2xl font-light transform transition-transform duration-300">+</span>
+                    </h3>
+                    <div class="accordion-content hidden p-4 border-t border-gray-200 bg-white">
+                        <p>这是本书最核心的技巧。它不是为了“写好”，而是为了“开闸”。</p>
+                        <ul class="list-disc list-inside mt-2 space-y-1 text-gray-700">
+                            <li><strong>设定时间：</strong> 10分钟、20分钟或1小时。</li>
+                            <li><strong>手不要停：</strong> 无论如何，笔尖不能离开纸面（或手指不能停止敲击）。如果你卡住了，就写“我卡住了”或重复最后一个词。</li>
+                            <li><strong>不要审查：</strong> 禁止划掉、删除或修改。这是在对抗“编辑”。</li>
+                            <li><strong>放空大脑：</strong> 不要“思考”该写什么。跟随你的“第一手念头”，不管它多荒谬。</li>
+                            <li><strong>目标：</strong> 绕过逻辑和评判，直接连接到你鲜活的、未经过滤的意识。</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 折叠项 2 -->
+                <div class="border border-gray-200 rounded-lg overflow-hidden">
+                    <h3 class="accordion-title text-lg font-semibold text-gray-800 p-4 flex justify-between items-center bg-gray-50">
+                        <span>[法则二] “第一手念头”的力量</span>
+                        <span class="text-blue-500 text-2xl font-light transform transition-transform duration-300">+</span>
+                    </h3>
+                    <div class="accordion-content hidden p-4 border-t border-gray-200 bg-white">
+                        <p>“第一手念头”是未经自我审查的原始思想。它们具有巨大的能量。</p>
+                        <p class="mt-2 text-gray-700">我们通常生活在“第二手”和“第三手”念头中（即“对念头的念头”）。比如：</p>
+                        <ul class="list-none space-y-2 mt-2">
+                            <li><span class="bg-red-100 text-red-800 px-2 py-1 rounded">第一手念头：</span> “那朵云像一头悲伤的鲸鱼。”</li>
+                            <li><span class="bg-gray-100 text-gray-600 px-2 py-1 rounded">第二手念头：</span> “这个比喻有点傻，别人会觉得我多愁善感。”</li>
+                            <li><span class="bg-gray-200 text-gray-500 px-2 py-1 rounded">第三手念头：</span> “我应该写点更深刻的东西，比如天空的广阔。”</li>
+                        </ul>
+                        <p class="mt-3 font-medium">戈德堡告诉我们：抓住第一个念头！它才是最真实、最有活力的。</p>
+                    </div>
+                </div>
+
+                <!-- 折叠项 3 -->
+                <div class="border border-gray-200 rounded-lg overflow-hidden">
+                    <h3 class="accordion-title text-lg font-semibold text-gray-800 p-4 flex justify-between items-center bg-gray-50">
+                        <span>[法则三] “堆肥”的艺术</span>
+                        <span class="text-blue-500 text-2xl font-light transform transition-transform duration-300">+</span>
+                    </h3>
+                    <div class="accordion-content hidden p-4 border-t border-gray-200 bg-white">
+                        <p>我们无法在经历的同时就写出深刻的东西（比如在热恋中写热恋）。经历需要时间发酵。</p>
+                        <p class="mt-2 text-gray-700">戈德堡称这个过程为“堆肥” (Composting)。你的所有经历——好的、坏的、无聊的、痛苦的——都是你心灵的“有机垃圾”。它们需要被收集起来，在意识的深处慢慢分解。</p>
+                        <p class="mt-2 font-medium">不要急于“使用”你的经历。持续写作练习，就是在不断“翻动”你的堆肥堆。最终，它们会转化为最肥沃的土壤，滋养出你意想不到的文字之花。</p>
+                    </div>
+                </div>
+
+                <!-- 折叠项 4 -->
+                <div class="border border-gray-200 rounded-lg overflow-hidden">
+                    <h3 class="accordion-title text-lg font-semibold text-gray-800 p-4 flex justify-between items-center bg-gray-50">
+                        <span>[法则四] 细节的力量：“展示，而非告知”</span>
+                        <span class="text-blue-500 text-2xl font-light transform transition-transform duration-300">+</span>
+                    </h3>
+                    <div class="accordion-content hidden p-4 border-t border-gray-200 bg-white">
+                        <p>这是写作中一条古老的准则，而戈德堡用禅宗的“在场”精神重新诠释了它。</p>
+                        <ul class="list-disc list-inside mt-2 space-y-1 text-gray-700">
+                            <li><strong>不要告知 (Tell)：</strong> “我很愤怒。” (抽象，无力)</li>
+                            <li><strong>要去展示 (Show)：</strong> “我把电话听筒砸回底座，指甲在塑料上划出了白痕。” (具体，生动)</li>
+                        </ul>
+                        <p class="mt-2">要做到“展示”，你必须使用“原创细节” (Original Detail)。不要说“水果”，要说“那颗表皮起了皱的石榴”。关注这些具体的细节，就是把你和读者带回那个瞬间。你的任务是记录你所看到的、听到的、闻到的，而不是你对它的“看法”。</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- 4. 思考测试题卡 -->
+            <div id="tab-4" class="tab-pane">
+                <h2 class="text-2xl font-semibold text-blue-700 mb-4 border-b pb-2">实践与思考：抽一张题卡</h2>
+                <p class="text-gray-600 mb-6">点击下面的按钮，抽取一个练习提示。这是你将本书理念付诸实践的机会。拿起你的笔和本子，开始10分钟的“写作练习”！</p>
+                
+                <!-- 题卡 -->
+                <div id="flashcard" class="flashcard rounded-xl p-6 md:p-10 flex flex-col justify-center items-center text-center shadow-lg">
+                    <p id="card-prompt" class="text-xl md:text-2xl font-semibold text-blue-900"></p>
+                </div>
+
+                <!-- 按钮 -->
+                <div class="text-center mt-6">
+                    <button id="new-card-btn" class="bg-blue-600 text-white font-semibold py-3 px-8 rounded-lg shadow-md hover:bg-blue-700 transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                        换一张新题卡
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // --- 标签页逻辑 ---
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            const tabPanes = document.querySelectorAll('.tab-pane');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+
+                    // 更新按钮样式
+                    tabButtons.forEach(btn => {
+                        btn.classList.add('tab-inactive');
+                        btn.classList.remove('tab-active');
+                    });
+                    this.classList.add('tab-active');
+                    this.classList.remove('tab-inactive');
+
+                    // 显示/隐藏内容
+                    tabPanes.forEach(pane => {
+                        if (pane.id === tabId) {
+                            pane.classList.add('active');
+                        } else {
+                            pane.classList.remove('active');
+                        }
+                    });
+                });
+            });
+
+            // --- 折叠笔记逻辑 ---
+            const accordions = document.querySelectorAll('.accordion-title');
+            
+            accordions.forEach(accordion => {
+                accordion.addEventListener('click', function() {
+                    const content = this.nextElementSibling;
+                    const icon = this.querySelector('span:last-child');
+                    
+                    if (content.classList.contains('hidden')) {
+                        // 展开
+                        content.classList.remove('hidden');
+                        icon.style.transform = 'rotate(45deg)';
+                    } else {
+                        // 折叠
+                        content.classList.add('hidden');
+                        icon.style.transform = 'rotate(0deg)';
+                    }
+
+                    // (可选) 关闭其他已打开的
+                    accordions.forEach(other => {
+                        if (other !== this) {
+                            other.nextElementSibling.classList.add('hidden');
+                            other.querySelector('span:last-child').style.transform = 'rotate(0deg)';
+                        }
+                    });
+                });
+            });
+
+            // --- 思考题卡逻辑 ---
+            const prompts = [
+                "你最大的执念是什么？试着就这个主题进行10分钟的写作练习。",
+                "你‘内心的编辑’最常对你说什么？把它写下来，然后继续写，别理它。",
+                "描述你现在所处的空间。使用所有感官，专注于‘原创细节’。",
+                "从‘我记得...’开始，进行15分钟的练习。不要停。",
+                "‘堆肥’练习：回想一件最近发生的、你还无法‘消化’的事件。只是如实地把它记录下来，不要分析。",
+                "找一个你平常不会写作的地方（比如厨房、浴室、公交站）写10分钟。",
+                "你为什么写作？（或者为什么想写？）用10分钟回答这个问题，想到什么写什么。",
+                "写写你今天吃的早餐。用上所有“展示”的技巧，不要“告知”。",
+                "选一种颜色（比如‘红色’），用10分钟写下你脑中闪过的所有关于红色的东西。",
+                "你上一次“失去控制”是什么时候？写下这个场景。",
+                "描述一个你深爱或痛恨的人。不要提“爱”或“恨”，只写细节。"
+            ];
+
+            const cardPrompt = document.getElementById('card-prompt');
+            const newCardBtn = document.getElementById('new-card-btn');
+            let currentPromptIndex = -1;
+
+            function showNewPrompt() {
+                let newIndex = Math.floor(Math.random() * prompts.length);
+                // 确保不连续抽到同一个
+                if (newIndex === currentPromptIndex && prompts.length > 1) {
+                    newIndex = (newIndex + 1) % prompts.length;
+                }
+                currentPromptIndex = newIndex;
+                cardPrompt.textContent = prompts[currentPromptIndex];
+            }
+
+            // 按钮点击事件
+            newCardBtn.addEventListener('click', showNewPrompt);
+
+            // 页面加载时显示第一张卡片
+            showNewPrompt();
+
+        });
+    </script>
+
+</body>
+</html>
