@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>《写出我心》学习网站</title>
+    <title>《写出我心》交互式学习网站</title>
     <!-- 引入Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- 引入Inter字体 -->
@@ -228,8 +228,8 @@
 </head>
 <body class="p-4 md:p-8">
 
-    <!-- NEW: Top-left Info -->
-    <div class="fixed top-4 left-4 z-50 flex items-center p-2 bg-white/90 backdrop-blur-sm rounded-lg shadow-lg border border-gray-200">
+    <!-- MODIFIED: Top-left Info - Made responsive -->
+    <div class="relative m-4 md:fixed md:top-4 md:left-4 md:m-0 z-50 flex items-center p-2 bg-white/90 backdrop-blur-sm rounded-lg shadow-lg border border-gray-200 w-fit"> <!-- w-fit ensures it doesn't stretch full width -->
       <img src="我的头像.png" alt="云不见头像" class="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-blue-300" onerror="this.src='https://placehold.co/48x48/e0e0e0/7f7f7f?text=头像'">
       <div class="ml-3">
         <p class="text-sm md:text-base font-semibold text-gray-800">云不见</p>
@@ -241,27 +241,27 @@
         <!-- 头部 -->
         <header class="p-6 md:p-8 bg-gradient-to-r from-blue-600 to-blue-800 text-white shadow-md">
             <h1 class="text-3xl md:text-4xl font-bold mb-2">《写出我心：普通人如何通过写作表达自我》</h1>
-            <p class="text-lg md:text-xl font-light">—— 释放你内在的作家：交互式学习</p>
+            <p class="text-lg md:text-xl font-light">—— 释放你内在的作家：交互式学习网站</p>
         </header>
 
         <!-- 标签页导航 -->
         <nav class="flex border-b border-gray-200 bg-gray-50">
-            <button class="tab-btn flex-1 py-4 px-2 text-center text-sm md:text-base border-b-4 tab-active" data-tab="tab-1">
+            <button class="tab-btn flex-1 py-4 px-1 text-xs md:text-sm whitespace-nowrap border-b-4 tab-active" data-tab="tab-1">
                 <span class="hidden md:inline">📚</span> 引读笔记
             </button>
-            <button class="tab-btn flex-1 py-4 px-2 text-center text-sm md:text-base border-b-4 tab-inactive" data-tab="tab-2">
+            <button class="tab-btn flex-1 py-4 px-1 text-xs md:text-sm whitespace-nowrap border-b-4 tab-inactive" data-tab="tab-2">
                 <span class="hidden md:inline">🗺️</span> 思维导图
             </button>
-            <button class="tab-btn flex-1 py-4 px-2 text-center text-sm md:text-base border-b-4 tab-inactive" data-tab="tab-3">
+            <button class="tab-btn flex-1 py-4 px-1 text-xs md:text-sm whitespace-nowrap border-b-4 tab-inactive" data-tab="tab-3">
                 <span class="hidden md:inline">📑</span> 总结复盘
             </button>
-            <button class="tab-btn flex-1 py-4 px-2 text-center text-sm md:text-base border-b-4 tab-inactive" data-tab="tab-4">
+            <button class="tab-btn flex-1 py-4 px-1 text-xs md:text-sm whitespace-nowrap border-b-4 tab-inactive" data-tab="tab-4">
                 <span class="hidden md:inline">💡</span> 复盘闪卡
             </button>
-            <button class="tab-btn flex-1 py-4 px-2 text-center text-sm md:text-base border-b-4 tab-inactive" data-tab="tab-5">
+            <button class="tab-btn flex-1 py-4 px-1 text-xs md:text-sm whitespace-nowrap border-b-4 tab-inactive" data-tab="tab-5">
                 <span class="hidden md:inline">🤔</span> 思考题
             </button>
-            <button class="tab-btn flex-1 py-4 px-2 text-center text-sm md:text-base border-b-4 tab-inactive" data-tab="tab-6">
+            <button class="tab-btn flex-1 py-4 px-1 text-xs md:text-sm whitespace-nowrap border-b-4 tab-inactive" data-tab="tab-6">
                 <span class="hidden md:inline">🎧</span> 播客精读
             </button>
         </nav>
@@ -766,8 +766,8 @@
         });
     </script>
 
-    <!-- NEW: Bottom-Right QR Codes -->
-    <div class="fixed bottom-4 right-4 z-50 flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-3 p-3 bg-white/90 backdrop-blur-sm rounded-lg shadow-xl border border-gray-200">
+    <!-- MODIFIED: Bottom-Right QR Codes - Made responsive -->
+    <div class="relative mt-8 mb-4 md:fixed md:bottom-4 md:right-4 md:mt-0 md:mb-0 z-50 flex flex-row justify-center space-x-3 p-3 bg-white/90 backdrop-blur-sm rounded-lg shadow-xl border border-gray-200">
       <!-- 星球二维码 -->
       <div class="text-center">
         <img src="星球二维码.png" alt="星球二维码" class="w-24 h-24 rounded-md border border-gray-200" onerror="this.src='https://placehold.co/96x96/f0f0f0/333?text=星球二维码'">
@@ -776,7 +776,7 @@
       <!-- 微信二维码 -->
       <div class="text-center">
         <img src="微信公众号.webp" alt="微信公众号" class="w-24 h-24 rounded-md border border-gray-200" onerror="this.src='https://placehold.co/96x96/f0f0f0/333?text=微信二维码'">
-        <p class="text-xs font-medium text-gray-700 mt-1.5">微信公众号</p>
+        <p class="text-xs font-medium text-gray-700 mt-1.5">微信二维码</p>
       </div>
     </div>
 
